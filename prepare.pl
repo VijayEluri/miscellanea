@@ -54,7 +54,7 @@ sub change_password {
     1;
   } else {
     print "Cannot change password\n";
-    0
+    0;
   }
 }
 
@@ -67,22 +67,17 @@ sub toggle_network_interface {
   $exp->soft_close();
   if ($exp->exitstatus() == 0) {
     print "Successfully ran the command 'sudo ifconfig $inteface $command'\n";
-    1
+    1;
   } else {
     print "Failed to ran the command 'sudo ifconfig $inteface $command'\n";
-    0
+    0;
   }
 }
 
 if ($kill) {
   my $random_password = random_digits;
   lp $random_password;
-  sleep 5;
-  toggle_network_interface "en0", "down";
-  toggle_network_interface "en1", "down";
   change_password $random_password;
 } elsif ($spawn) {
-  toggle_network_interface "en0", "up";
-  toggle_network_interface "en1", "up";
   change_password $new_password;
 }
