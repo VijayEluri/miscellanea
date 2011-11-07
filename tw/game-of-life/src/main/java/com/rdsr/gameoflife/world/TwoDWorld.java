@@ -8,9 +8,9 @@ import java.util.Map;
 
 import com.rdsr.gameoflife.cell.Cell;
 import com.rdsr.gameoflife.cell.Position;
-import com.rdsr.gameoflife.cell.TwoDPosition;
 
 public class TwoDWorld implements World {
+
   /**
    * Assumptions: Currently in a 2d world, just the live cells are stored.
    * If a cell is no present in the liveCellMap, its either dead or non-existent.
@@ -18,12 +18,13 @@ public class TwoDWorld implements World {
    * Storing just the live cells is more efficient too. Since this world
    * is infinite, we can't possibly store every cell.
    */
-  final Map<TwoDPosition, Cell> liveCellMap;
+  final Map<Position, Cell> liveCellMap;
 
-  private TwoDWorld(Map<TwoDPosition, Cell> map) {
+  private TwoDWorld(Map<Position, Cell> map) {
     this.liveCellMap = map;
   }
 
+  @Override
   public Map<Position, Cell> listAllCells() {
     final Map<Position, Cell> allCells = new HashMap<Position, Cell>();
 
@@ -31,10 +32,10 @@ public class TwoDWorld implements World {
       allCells.put(position, liveCellMap.get(position));
       /**
        * We also return all the dead neighbors of a live cell,
-       * since there could be a chance that one of these dead 
+       * since there could be a chance that one of these dead
        * cells can change state.
        */
-      for (final Position neighborPosition : listAllNeighorPositions(position))
+      for (final Position neighborPosition : position.listAllNeighorPositions())
         if (!allCells.containsKey(neighborPosition))
           allCells.put(neighborPosition, Cell.DEAD);
     }
@@ -46,12 +47,13 @@ public class TwoDWorld implements World {
    * returns all the neighbors of a given position. The neighbors include
    * both dead and live cells
    */
+  @Override
   public List<Cell> getNeighbors(Position position) {
     if (position == null)
       throw new IllegalArgumentException("Position is null");
 
     final List<Cell> neighbors = new ArrayList<Cell>();
-    for (final Position neighborPosition : listAllNeighorPositions(position)) {
+    for (final Position neighborPosition : position.listAllNeighorPositions()) {
       if (liveCellMap.containsKey(neighborPosition))
         neighbors.add(liveCellMap.get(neighborPosition));
       else
@@ -64,11 +66,11 @@ public class TwoDWorld implements World {
   @Override
   public String toString() {
     final StringBuilder s = new StringBuilder();
-    final List<TwoDPosition> positions = new ArrayList<TwoDPosition>(liveCellMap.keySet());
+    final List<Position> positions = new ArrayList<Position>(liveCellMap.keySet());
     Collections.sort(positions);
 
-    for (final TwoDPosition position : positions) {
-      s.append(position.getI()).append(",").append(position.getJ()).append("\n");
+    for (final Position position : positions) {
+      s.append(position).append("\n");
     }
     return s.toString();
   }
@@ -104,46 +106,24 @@ public class TwoDWorld implements World {
     return true;
   }
 
-  private List<Position> listAllNeighorPositions(Position position) {
-    /**
-     * At max there can be only 8 neighbor positions in a 2d world
-     */
-    final List<Position> positions = new ArrayList<Position>();
-    /**
-     * 2d world will always have a position of type 2dPosition
-     * as created by the builder.
-     */
-    final TwoDPosition TwoDPosition = (TwoDPosition) position;
-    final int i = TwoDPosition.getI(), j = TwoDPosition.getJ();
-
-    positions.add(new TwoDPosition(i - 1, j - 1));
-    positions.add(new TwoDPosition(i - 1, j));
-    positions.add(new TwoDPosition(i - 1, j + 1));
-
-    positions.add(new TwoDPosition(i, j - 1));
-    positions.add(new TwoDPosition(i, j + 1));
-
-    positions.add(new TwoDPosition(i + 1, j - 1));
-    positions.add(new TwoDPosition(i + 1, j));
-    positions.add(new TwoDPosition(i + 1, j + 1));
-
-    return positions;
-  }
-
   public static class TwoDWorldBuilder implements WorldBuilder {
-    Map<TwoDPosition, Cell> partialWorld = new HashMap<TwoDPosition, Cell>();
 
+    Map<Position, Cell> partialWorld = new HashMap<Position, Cell>();
+
+    @Override
     public void init() {
-      partialWorld = new HashMap<TwoDPosition, Cell>();
+      partialWorld = new HashMap<Position, Cell>();
     }
 
+    @Override
     public WorldBuilder update(Position position, Cell cell) {
       if (cell.getState() == Cell.State.LIVING)
         // 2d world only maintains mappings for living cells
-        partialWorld.put((TwoDPosition) position, cell); // 2D world only works with 2d position
+        partialWorld.put(position, cell); // 2D world only works with 2d position
       return this;
     }
 
+    @Override
     public World build() {
       return new TwoDWorld(partialWorld);
     }
