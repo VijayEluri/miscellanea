@@ -1,0 +1,1 @@
+svn status | grep -v "/\." | grep -v "target$" | grep -v "test-output" | grep -v "SecurityAuth.audit$" | grep -v ".project$" | grep -v ".settings" | grep -v ".classpath"
