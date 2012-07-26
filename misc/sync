@@ -1,0 +1,7 @@
+if [ X != X${1} ]
+then
+    echo "syncing ${1} .."
+    rsync --delete --chmod=u+rwx,a+rx --exclude '.*' --exclude 'target' -r ${1} [hostname]/[path]
+else
+    echo "Usage: rrsync [folder]"
+fi
