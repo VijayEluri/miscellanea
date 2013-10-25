@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+state_dir=$1
+mkdir -p $state_dir
+
+sudo apt-key add $state_dir/repo.keys
+sudo cp $state_dir/sources.list /etc/apt/sources.list
+sudo apt-get update
+sudo apt-get install dselect
+sudo dpkg --set-selections < $state_dir/package.list
+sudo apt-get dselect-upgrade -y

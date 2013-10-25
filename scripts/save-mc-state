@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+state_dir=$1
+mkdir -p $state_dir
+
+echo "Moving machine state configuration under $state_dir"
+
+dpkg --get-selections > $state_dir/package.list
+sudo cp /etc/apt/sources.list $state_dir/sources.list
+sudo apt-key exportall > $state_dir/repo.keys
