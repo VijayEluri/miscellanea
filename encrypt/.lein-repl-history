@@ -1,0 +1,2 @@
+(use 'encrypt.core)
+(main ["decrypt" "/home/rdsr/org/passwords.org" "/tmp/passwords.org"])
