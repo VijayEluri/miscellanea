@@ -1,0 +1,7 @@
+if [ X != X${1} ]
+then
+    echo "syncing ${1} to rratti:${1}"
+    rsync --verbose --delete --chmod=u+rwx,a+rx --exclude '.*' --exclude 'target' --exclude 'build' -r ${1} rratti-ld1:${1}/..
+else
+    echo "Usage: synct [folder]"
+fi

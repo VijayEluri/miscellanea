@@ -1,0 +1,8 @@
+if [ X != X${1} ]
+then
+    dir=dirname ${1}
+    echo "syncing ${1} to $dir"
+    rsync --verbose --delete --chmod=u+rwx,a+rx --exclude '.*' --exclude 'target' --exclude 'build' -r rratti-ld1:${1} $dir
+else
+    echo "Usage: syncf [folder]"
+fi

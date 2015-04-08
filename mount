@@ -1,0 +1,1 @@
+sudo mount -t vboxsf mac ~/mac -o gid=100,uid=1000
