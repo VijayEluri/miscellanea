@@ -2,8 +2,7 @@
   (:require [clojure.java.io :as io])
   (:import [java.io File ByteArrayOutputStream]
            [javax.crypto Cipher SecretKeyFactory]
-           [javax.crypto.spec PBEParameterSpec PBEKeySpec]
-           (java.lang.reflect Type)))
+           [javax.crypto.spec PBEParameterSpec PBEKeySpec]))
 
 (def salt (byte-array (map byte [0x1 0x10 0x30 0x40 0x34 0x24 0x11 0x23])))
 (def cnt 20)
