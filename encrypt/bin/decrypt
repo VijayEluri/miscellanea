@@ -1,1 +1,0 @@
-java -cp $CLASSPATH clojure.main src/encrypt/core.clj decrypt $1 $2
